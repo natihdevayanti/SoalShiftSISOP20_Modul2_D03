@@ -104,7 +104,7 @@ daemonsize();
     time_t waktu;
     struct tm * tm_now;
     time(&waktu);
-//tm_hour menyesuaikan
+//waktu menyesuaikan
     tm_now = localtime(&waktu);
 	  
 //lakukan pengecekan waktu
@@ -122,7 +122,7 @@ daemonsize();
     }
 }
  }
-//melakukan delay 1 tm_sec
+//melakukan delay 1 sec
     sleep (1);
   }
 }
