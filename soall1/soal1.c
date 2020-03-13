@@ -98,6 +98,7 @@ return 0;
 //daemon
 daemonsize();
 
+	//lakukan looping untuk argumen 4
   while (1)
   {
     time_t waktu;
@@ -105,13 +106,15 @@ daemonsize();
     time(&waktu);
 //tm_hour menyesuaikan
     tm_now = localtime(&waktu);
-
+	  
+//lakukan pengecekan waktu
     if ((tm_now->tm_sec == arg[1] || arg[1] == -1)){
 	if (tm_now->tm_min == arg[2] || arg[2] == -1){
 	if (tm_now -> tm_hour == arg[3] || arg[3] == -1)
     {
-      pid_t child = fork();
       int stts;
+      pid_t child = fork();
+      //child menjalankan bash
       if (child == 0){
         char *argv2[] = {"bash", argv1[4], NULL};
         execv("/bin/bash", argv2);
