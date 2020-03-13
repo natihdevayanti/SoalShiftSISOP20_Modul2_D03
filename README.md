@@ -20,11 +20,12 @@ Elvira Catrine Natalie (05111840000016)
 - Program akan mengeluarkan pesan error jika argumen yang diberikan tidak sesuai.
 
 Penjelasan: 
-• Memeriksa argumen yang di diinput oleh user berjumlah lima argumen atau lebih
 
-• ./program atau nama program termasuk dalam argumen yang akan dipassing ke dalam fungsi main(), maka total argumen yang masuk harus berjumlah lima. Kemudian terapkan error handling.
+Memeriksa argumen yang di diinput oleh user berjumlah lima argumen atau lebih
 
-• Gunakan perintah yang digunakan untuk membatasi argumen yang diinput oleh user hanya angka dan *.
+./program atau nama program termasuk dalam argumen yang akan dipassing ke dalam fungsi main(), maka total argumen yang masuk harus berjumlah lima. Kemudian terapkan error handling.
+
+Gunakan perintah yang digunakan untuk membatasi argumen yang diinput oleh user hanya angka dan *.
 
 
 - Program hanya menerima 1 config cron.
@@ -178,7 +179,8 @@ else
 
 
 ## SOAL 2 
-## Membuat sebuah program C yang dapat download dan zip sekumpulan gambar
+
+### Membuat sebuah program C yang dapat download dan zip sekumpulan gambar
 
 - Shisoppu mantappu! itulah yang selalu dikatakan Kiwa setiap hari karena sekarang dia merasa sudah jago materi sisop. Karena merasa jago, suatu hari Kiwa iseng membuat sebuah program. Kiwa lalu terbangun dan sedih karena menyadari programnya hanya sebuah mimpi. Buatlah program dalam mimpi Kiwa jadi nyata! 
 
@@ -204,35 +206,110 @@ e) Kiwa menambahkan bahwa program utama bisa dirun dalam dua mode, yaitu MODE_A 
 
 > Langkah dan Penjelasan
 
+- Menggunakan template daemon
+
+```
+
+pid_t pid, sid;
+  pid = fork();
+  if (pid < 0)
+    exit(EXIT_FAILURE);
+
+  if (pid > 0)
+    exit(EXIT_SUCCESS);
+
+  umask(0);
+
+  sid = setsid();
+  if (sid < 0)
+  exit(EXIT_FAILURE);
+  
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+  
+ ```
+
+- Program ini menggunakan struct time.h untuk melakukan segala proses yang berkaitan dengan waktu.
+
+
+> Kendala
+
+- Kurang memahami fungsi dan syntax yang bisa dipergunakan dalam soal
+
+- Kami belum mengetahui cara solve problem di atas
+
 
 
 ## SOAL 3
 
+### Ekstrak Folder dan File
+
 ### 3a
 
-Mendownload 28 gambar dari link yang sudah tersedia dengan fungsi wget dan mengubah nama filenya dengan fungsi -0
+Program buatan jaya harus bisa membuat dua direktori di “/home/[USER]/modul2/”. Direktori yang pertama diberi nama “indomie”, lalu lima detik kemudian membuat direktori yang kedua bernama “sedaap”.
+
 
 > Langkah dan Penjelasan
+
+- Pertama-tama membuat folder modul2 dulu
 
 Code 
 
 ```
 
-#!/bin/bash
-for i in {1..28}
-do
-wget -O pdkt_kusuma_$i https://loremflickr.com/320/240/cat -a wget.log
-done
+mkdir modul2
 
 ```
 
-- Kita gunakan -a untuk menambahkan lalu -0 untuk mengubah nama file menjadi “pdkt_kusuma_$i” dimana maksud dari $i adalah penomoran (iterasi) -> `sebanyak 28 gambar` saat mendownload gambar. 
+- Program 
 
-- Menggunakan fungsi wget untuk langsung mendownload file yang ada di website dan wget.log untuk menyimpan file yang sudah didownload
+```
+
+int main()
+{
+int stts;
+pid_t child_id;
+child_id = fork();
+if (child_id < 0)
+{
+exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+}
+
+if (child_id == 0)
+{
+// this is child
+    pid_t child_id1;
+	child_id1 = fork();
+    if(child_id1 < 0)
+    {
+        exit(EXIT_FAILURE);
+    }
+    if (child_id1 == 0)
+    {
+        char *arg[] = {"mkdir", "-p", "/home/elvira/modul2/indomie", NULL};
+        execv("/bin/mkdir", arg);
+    }
+    else
+    {
+        while ((wait(&stts)) > 0);    
+        sleep (5);  
+        char *arg[] = {"mkdir", "-p", "/home/elvira/modul2/sedaap", NULL};
+        execv("/bin/mkdir", arg);
+    }
+}
+
+```
+
+- Gunakan fungsi fork() terlebih dahulu untuk membuat direktori pertama (indomie). Membuat direktori menggunakan mkdir –p jika merupakan child process, lalu gunakan perintah execv() untuk menjalankan program.
+
+- Direktori kedua yaitu “sedaap” dibuat lima detik kemudian setelah direktori “indomie” dibuat. Maka kita menggunakan perintah sleep(5)
+
+
 
 ### 3b
 
-Script download hanya berjalan setiap 8 jam dimulai dari pukul 6.05 setiap hari kecuali hari Sabtu, maka dibuat cron job sebagai berikut
+Kemudian program tersebut harus meng-ekstrak file jpg.zip di direktori “/home/[USER]/modul2/”. Setelah tugas sebelumnya selesai, ternyata tidak hanya itu tugasnya.
 
 > Langkah dan Penjelasan
 
@@ -240,20 +317,33 @@ Code
 
 ```
 
-crontab -e
+else
+{
+    while ((wait(&stts)) > 0);
 
-5 6-23/8 * * 0-5 /home/elvira/soal3.sh
+    pid_t child_id2;
+	child_id2 = fork();
+
+    if (child_id2 < 0)
+    {
+        exit(EXIT_FAILURE);
+    }
+    if (child_id2 == 0)
+    {
+        char *arg[] = {"unzip", "-oq", "/home/elvira/modul2/jpg.zip", NULL};
+
+        execv("/usr/bin/unzip", arg);
+    }
 
 ```
 
-`5 6-23/8 * * 0-5`
-- 5 adalah menit ke-5
-- 6-23/8 adalah setiap 8 jam dari pukul 06.00-23.00
-- 0-5 adalah hari minggu - jumat (setiap hari kecuali hari sabtu)
+- Gunakan fungsi fork() untuk unzip file. Gunakan perintah unzip() jika merupakan child process, lalu jalankan program menggunakan perintah execv()
+
+
 
 ### 3c
 
-Membuat sebuah script untuk mengidentifikasi gambar yang identik dari keseluruhan gambar yang terdownload tadi. Bila terindikasi sebagai gambar yang identik, maka sisakan 1 gambar dan pindahkan sisa file identik tersebut ke dalam folder ./duplicate dengan format filename "duplicate_nomor" (contoh : duplicate_200, duplicate_201). Setelah itu lakukan pemindahan semua gambar yang tersisa kedalam folder ./kenangan dengan format filename "kenangan_nomor" (contoh: kenangan_252, kenangan_253). Setelah tidak ada gambar di ​current directory​, maka lakukan backup seluruh log menjadi ekstensi ".log.bak"
+Diberilah tugas baru yaitu setelah di ekstrak, hasil dari ekstrakan tersebut (di dalam direktori “home/[USER]/modul2/jpg/”) harus dipindahkan sesuai dengan pengelompokan, semua file harus dipindahkan ke “/home/[USER]/modul2/sedaap/” dan semua direktori harus dipindahkan ke “/home/[USER]/modul2/indomie/”.
 
 > Langkah dan Penjelasan
 
@@ -261,46 +351,126 @@ Code
 
 ```
 
-#!/bin/bash
+ else
+    {
+       while ((wait(&stts)) > 0);
 
-grep "Location" wget.log > location.log
-readarray line < location.log
-for ((i=0; i<28; i++))
-do
-for ((j=0; j<=i; j++))
-do
-if [ $i == $j ]
-then
-continue
-elif [ "${line[$i]}" == "${line[$j]}" ]
-then
-mv pdkt_kusuma_"$(($i+1))".jpg ./duplicate/duplicate_"$i".jpg
-fi
-done
-done
+       struct dirent *dr;
+	struct stat st;
+	stat(dr->d_name, &st);
+	DIR *d = opendir ("/home/elvira/modul2/jpg/");
+        char filename [2000];
+	char destination_file[2000];
+       //chdir ("/home/elvira/modul2/jpg/");
+       d = opendir("."); 
+       if(d)
+       {
+           while ((dr = readdir(d)) != NULL)
+           {
+               pid_t child_id3;
+               child_id3 = fork();
 
-for ((i=1; i<=28; i++))
-do
-mv pdkt_kusuma_"$i".jpg ./kenangan/kenangan_"$i".jpg
-done
-cp wget.log wget.log.bak
+                if (child_id3 == 0)
+                {
+       
+                    sprintf (filename, "home/elvira/modul2/jpg/%s", dr->d_name);
+
+                    if(S_ISDIR(st.st_mode))
+                    {
+                        if(strcmp(dr->d_name, ".")==0 || strcmp(dr->d_name, "..")== 0)
+			continue;
+                        else
+                        {
+                            pid_t child_id4;
+                            child_id4 = fork();
+ 
+                            if (child_id4 == 0){
+                            char* arg[] = {"mv", filename, "/home/elvira/modul2/indomie/", NULL};
+                            execv("/bin/mv", arg);
+                        }
 
 ```
 
-> Langkah dan Penjelasan
+- Struct dirent *dr adalah struct yang berfungsi untuk membaca file yang terdapat pada direktori
 
-- Logfile wget.log yang terdapat karakter "Location" disimpan pada file "location.log"
+- Jika directory tidak kosong, perintah akan dijalankan, sehingga menggunakan perintah readdir(d)
 
-- `mkdir kenangan` dan `mkdir duplicate` untuk membuat folder kenangan dan duplicate
+- Direktori tidak termasuk (proses berkelanjutan) jika direktori berupa . dan .., maka harus menggunakan strcmp() untuk membandingkan dengan dr.
 
-- Untuk pengecekan gambar, maka dilakukan dengan for nested (iterasi 1-28)
+- Jika tipe dr merupakan direktori, gunakan fungsi snprintf() untuk memformat dan menyimpan nama hasil ekstrak bertipe direktori yang akan disimpan pada direktori indomie dalam buffer array.
 
-- Jika locationnya sama, maka gambar tsb identik dan nantinya dipindahkan ke folder `duplicate`
+- Gunakan fungsi fork() terlebih dahulu lalu gunakan mv untuk memindahkan nama hasil ekstrak bertipe direktori ke direktori indomie.
 
-- Jika gambar tidak berduplikat, maka dipindahkan ke folder `kenangan` dan namanya diganti menjadi kenangan + penomorannya. 
- 
-- Lalu akan dilakukan backup menuju file wget.log.bak
+- Jika tipe dr merupakan file, gunakan fungsi snprintf() untuk memformat dan menyimpan nama hasil ekstrak ber tipe file yang akan disimpan pada direktori sedaap dalam buffer array (coding ada di 3c).
 
-![Screenshot from 2020-02-21 16-36-57](https://user-images.githubusercontent.com/56763600/75027937-f5629c80-54d1-11ea-8865-f312c87ac69f.png)
+- Gunakan fungsi fork() terlebih dahulu lalu gunakan mv untuk memindahkan nama hasil esktrak yang bertipe file ke direktori sedaap.
+
+### 3d
+
+Untuk setiap direktori yang dipindahkan ke “/home/[USER]/modul2/indomie/” harus membuat dua file kosong. File yang pertama diberi nama “coba1.txt”, lalu 3 detik kemudian membuat file bernama “coba2.txt”. (contoh : “/home/[USER]/modul2/indomie/{nama_folder}/coba1.txt”).
+
+```
+
+                        else {
+                            
+                            while ((dr = readdir(d)) != NULL){
+                                pid_t child_id5;
+                                child_id5 = fork();
+                                if (child_id5 == 0){
+                                    FILE *target;
+                                    sprintf(destination_file, "/home/elvira/modul2/indomie/%s/coba1.txt", dr->d_name);
+                                    target = fopen (destination_file, "w");
+                                    fclose (target);
+                                }
+                                else{
+                                    while ((wait(&stts)) > 0);
+                                    sleep (3);
+					FILE *target;
+                                    sprintf(destination_file, "/home/elvira/modul2/indomie/%s/coba2.txt", dr->d_name);
+                                    target = fopen(destination_file, "w");
+                                    fclose (target);
+                                    exit(0);
+                                }
+                            }
+                        }
+                    }
+                }
+                    else {
+                        char* arg[] = {"mv", filename, "/home/elvira/modul2/sedaap/", NULL};
+                        execv("/bin/mv", arg);
+                    }
+                }
+           }
+               closedir(d);
+
+           }
+       }
+    }  
+return 0;
+}
+
+```
+
+- Terdapat dua file kosong yang akan dibuat yaitu file coba1.txt dan coba2.txt jika dr bertipe direktori
+
+- Gunakan fungsi snprintf() untuk memformat dan menyimpan coba1.txt yang akan disimpan pada direktori dalam buffer array.
+
+- Membuat file coba1.txt lalu gunakan perintah execv() untuk eksekusi 
+
+- File coba2.txt dibuat tiga detik kemudian setelah file coba1.txt dibuat, maka gunakan perintah sleep(3)
+
+- Gunakan fungsi snprintf() untuk memformat dan menyimpan file coba2.txt yang akan disimpan pada direktori dalam buffer array.
+
+- Membuat file coba2.txt lalu gunakan perintah execv() untuk eksekusi 
+
+Karena Jaya terlalu banyak tugas dia jadi stress, jadi bantulah Jaya agar bisa membuat
+program tersebut.
+
+Catatan :
+- Tidak boleh memakai system().
+- Tidak boleh memakai function C mkdir() ataupun rename().
+- Gunakan exec dan fork
+- Direktori “.” dan “..” tidak termasuk
+
 
 **TERIMA KASIH**
