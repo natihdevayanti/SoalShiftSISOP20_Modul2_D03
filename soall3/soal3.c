@@ -30,6 +30,7 @@ if (child_id == 0)
     if (child_id1 == 0)
     {
         char *arg[] = {"mkdir", "-p", "/home/elvira/modul2/indomie", NULL};
+	    //membuat direktori indomie
         execv("/bin/mkdir", arg);
     }
     else
@@ -37,6 +38,7 @@ if (child_id == 0)
         while ((wait(&stts)) > 0);    
         sleep (5);  
         char *arg[] = {"mkdir", "-p", "/home/elvira/modul2/sedaap", NULL};
+	    //membuat direktori sedaap
         execv("/bin/mkdir", arg);
     }
 }
@@ -55,7 +57,7 @@ else
     if (child_id2 == 0)
     {
         char *arg[] = {"unzip", "-oq", "/home/elvira/modul2/jpg.zip", NULL};
-
+// melakukan unzip
         execv("/usr/bin/unzip", arg);
     }
 //no 3c
@@ -85,8 +87,10 @@ else
 
                     if(S_ISDIR(st.st_mode))
                     {
+			    
                         if(strcmp(dr->d_name, ".")==0 || strcmp(dr->d_name, "..")== 0)
 			continue;
+			    
                         else
                         {
                             pid_t child_id4;
@@ -103,8 +107,10 @@ else
                                 pid_t child_id5;
                                 child_id5 = fork();
                                 if (child_id5 == 0){
-                                    FILE *target;
+					//membuat file
+                                    FILE *target; 
                                     sprintf(destination_file, "/home/elvira/modul2/indomie/%s/coba1.txt", dr->d_name);
+					//memasukan coba1.txt kedalam masing-masing folder yang ada pada folder indomie
                                     target = fopen (destination_file, "w");
                                     fclose (target);
                                 }
@@ -113,6 +119,7 @@ else
                                     sleep (3);
 					FILE *target;
                                     sprintf(destination_file, "/home/elvira/modul2/indomie/%s/coba2.txt", dr->d_name);
+					//memasukan coba2.txt kedalam masing-masing folder yang ada pada folder indomie
                                     target = fopen(destination_file, "w");
                                     fclose (target);
                                     exit(0);
@@ -123,6 +130,7 @@ else
                 }
                     else {
                         char* arg[] = {"mv", filename, "/home/elvira/modul2/sedaap/", NULL};
+			    //file lainnya dimasukkan dalam folder sedaap
                         execv("/bin/mv", arg);
                     }
                 }
