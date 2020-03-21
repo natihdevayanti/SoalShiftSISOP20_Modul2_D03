@@ -13,7 +13,6 @@ Elvira Catrine Natalie (05111840000016)
 
 **Program C menyerupai crontab**
 
-> Penjelasan
 
 **a. Program menerima 4 argumen berupa: i. Detik: 0-59 atau * (any value) ii. Menit: 0-59 atau * (any value) iii. Jam: 0-23 atau * (any value) iv. Path file .sh.**
 
@@ -22,6 +21,7 @@ Elvira Catrine Natalie (05111840000016)
 > Langkah 
 
 - Melakukan checking apakah ada * pada argument yang dimasukkan, jika ada maka return 1 (benar).
+
 Code: 
 ```
 int bintang (char star[]) {
@@ -113,7 +113,7 @@ return 0;
  
 - Perintah diatas digunakan untuk mendeteksi apakah terjadi error atau tidak. Apabila input berupa integer, maka akan dipindah ke array arg[i] yang berisi integer. Jika berupa * akan ditandai di array arg[i] dengan -1, selain itu tidak valid.
 
-- Fungsi atoi() digunakan untuk mengubah string angka menjadi bilangan integer.
+- Fungsi `atoi()` digunakan untuk mengubah string angka menjadi bilangan integer.
 
 - Kemudian lakukan checking apakah inputan kita merupakan masih dalam range satuan jam dan juga menit. Jika tidak, maka akan mengeluarkan perintah error/tidak valid.
 
@@ -194,15 +194,16 @@ else
 
 - Menggunakan while karena program yang dibuat ini seperti crontab sehingga akan dilakukan secara terus menerus.
 
-- Variabel time_t waktu,struct tm* tm_now berada pada library time.h yang nantinya akan digunakan untuk mendapatkan waktu yang tertera pada komputer.
+- Variabel `time_t waktu, struct tm* tm_now` berada pada library time.h yang nantinya akan digunakan untuk mendapatkan waktu yang tertera pada komputer.
 
-- Kemudian tm_now=localtime(&waktu); digunakan untuk memasukkan nilai waktu ke format struct * tm_now.
+- Kemudian `tm_now=localtime(&waktu);` digunakan untuk memasukkan nilai waktu ke format `struct * tm_now`.
 
 - Lalu lakukan pengecekan apakah argumen ketiga (hour) yang dimasukkan merupakan * atau sama dengan jam waktu yang tertera. Lalu dilakukan lagi pengecekan apakah argumen kedua (minutes) yang dimasukkan merupakan * atau sama dengan menit waktu yang tertera. Setelah itu dilakukan pengecekan lagi apakah argumen pertama (second) yang dimasukkan sama dengan * atau sama dengan menit waktu yang tertera.
 
 - Jika memenuhi kondisi-kondisi diatas maka akan dipanggil fungsi execv untuk mengeksekusi bash pada argv1[4] yang terletak pada argumen terakhir inputan.
  
-- sleep(1); merupakan penanda bahwa fungsi tersebut setiap berjalan akan melakukan delay 1 detik. Maka tiap 1 detik fungsi ini akan melakukan penyocokan antara waktu di argumen dengan waktu yang tertera di saat itu.
+- `sleep(1);` merupakan penanda bahwa fungsi tersebut setiap berjalan akan melakukan delay 1 detik. Maka tiap 1 detik fungsi ini akan melakukan penyocokan antara waktu di argumen dengan waktu yang tertera di saat itu.
+
 
 
 ## SOAL 2 
@@ -283,7 +284,9 @@ chdir(dir_name);
 int t = (int)time(NULL); 
 t = ((t%1000)+100);
 sprintf(url, "https://picsum.photos/%d", t); 
-strftime(sftime, 200, "%Y-%m-%d_%H:%M:%S", info); char *arg2[] = {"wget", url, "-qO", sftime, NULL}; execv("/usr/bin/wget", arg2);
+strftime(sftime, 200, "%Y-%m-%d_%H:%M:%S", info); 
+char *arg2[] = {"wget", url, "-qO", sftime, NULL}; 
+execv("/usr/bin/wget", arg2);
 }
 sleep(5);
 }
@@ -390,7 +393,6 @@ Program buatan jaya harus bisa membuat dua direktori di â€œ/home/[USER]/modul2/â
 
 
 > Langkah dan Penjelasan
-
 
 - Program 
 
