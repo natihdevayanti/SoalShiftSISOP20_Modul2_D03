@@ -27,7 +27,7 @@ f. Metode enkripsi pada suatu direktori juga berlaku kedalam direktori lainnya y
 
 > Langkah 
 
-- Digunakan character sebagai berikut untuk menyimpan character key yang digunakan, yaitu `*characterlist = {"9(ku@AW1[Lmvgax6q`5Y2Ry?+sF!^HKQiBXCUSe&0M.b%rI'7d)o4~VfZ*{#:}ETt$3J-zpc]lnh8,GwP_ND|jO"};`
+- Digunakan character sebagai berikut untuk menyimpan character key yang digunakan, yaitu `*characterlist = {"9(ku@AW1[Lmvgax6q`5Y2Ry?+sF!^HKQiBXCUSe&0M.b%rI'7d)o4~VfZ*{#:}ETt$3J-zpc]lnh8,GwP_ND|jO"};``
 
 - Character  memiliki panjang 87 karakter dan menggunakan 10 key, sehingga apabila dienkrip akan digeser ke kanan sebanyak 10 karakter dan jika didekrip akan digeser ke kiri sebanyak 10 karakter. 
 
@@ -332,7 +332,7 @@ void permission_sync(char *curr_sync, char *first_path)
 
 Keterangan 	:
 
-- Jika terdeteksi terdapat suatu folder dengan awalan `"sync_", maka isi dari folder aslinya akan di-copy ke folder "sync_" tersebut. 
+- Jika terdeteksi terdapat suatu folder dengan awalan `"sync_"`, maka isi dari folder aslinya akan di-copy ke folder "sync_" tersebut. 
 
 - Pendeteksian kondisi jika nama folder berisi awalan `"sync_"` atau tidak dilakukan di fungsi `readdir()` dan `mkdir()`
 
